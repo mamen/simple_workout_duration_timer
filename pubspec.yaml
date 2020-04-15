@@ -1,0 +1,32 @@
+name: workout_timer
+description: A simple countdown to keep track of your current exercise duration
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/appicon.png"
+  image_path_android: "assets/icons/appicon.png"
+  image_path_ios: "assets/icons/appicon.png"
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/icons/appicon.png
