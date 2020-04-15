@@ -13,6 +13,7 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: WorkoutTimerPage(),
+        debugShowCheckedModeBanner: false,
     );
   }
 }
