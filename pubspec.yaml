@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
+  imagebutton: ^0.0.6
+  audioplayers: ^0.13.2
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +32,4 @@ flutter:
 
   assets:
     - assets/icons/appicon.png
+    - assets/sounds/tick.mp3

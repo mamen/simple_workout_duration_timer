@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:workout_timer/settings.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() => runApp(App());
 
@@ -28,27 +31,55 @@ class WorkoutTimerPage extends StatefulWidget {
 class _WorkoutTimerPageState extends State<WorkoutTimerPage> {
   int _counter = 0;
   final int _timerMaxValue = 60;
+  Timer _timer;
+  final AudioCache _audioCache = new AudioCache();
 
-  _WorkoutTimerPageState() {
+  _WorkoutTimerPageState(){
+    setup();
+  }
+
+  void setup() async {
+    hideStatusBar();
+    await loadSoundCache();
+    _timer = await createAndStartTimer();
+  }
+
+  void hideStatusBar() {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    startTimeout();
   }
 
-  void startTimeout() {
+  Future<void> loadSoundCache() async {
+    _audioCache.clearCache();
+    await _audioCache.fetchToMemory("sounds/tick.mp3");
+  }
+
+  Future<Timer> createAndStartTimer() async  {
     var duration = Duration(seconds: 1);
-    new Timer.periodic(duration, (Timer t) => handleTimeout());
+    return new Timer.periodic(duration, (Timer t) => handleTimeout());
   }
 
-  void handleTimeout() {
+  Future<void> playTickSound() async {
+    await _audioCache.play("sounds/tick.mp3");
+  }
+
+  Future<void> handleTimeout() async {
+    await playTickSound();
     setState(() {
       (_counter > _timerMaxValue) ? _counter = 0 : _counter++;
     });
   }
 
-  static Future<void> setEnabledSystemUIOverlays(
-      List<SystemUiOverlay> overlays) async {
-    await SystemChannels.platform
-        .invokeMethod<void>('SystemChrome.setEnabledSystemUIOverlays');
+  static Future<void> setEnabledSystemUIOverlays() async {
+    await SystemChannels.platform.invokeMethod<void>('SystemChrome.setEnabledSystemUIOverlays');
+  }
+
+  void openSettings() {
+    _timer.cancel();
+
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (ctxt) => new Settings()),
+    );
   }
 
   @override
@@ -66,6 +97,13 @@ class _WorkoutTimerPageState extends State<WorkoutTimerPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: openSettings,
+        backgroundColor: Colors.transparent,
+        child: Icon(Icons.settings, size: 52, color: Color.fromRGBO(168, 208, 219, 1),),
+        elevation: 0,
       ),
     );
   }
